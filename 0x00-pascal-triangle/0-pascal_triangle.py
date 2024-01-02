@@ -19,4 +19,5 @@ def pascal_triangle(n):
             for j in range(1, i):
                 r[j] = triangles[i - 1][j - 1] + triangles[i - 1][j]
         triangles.append(r)
-    return triangle
+    return triangles
+

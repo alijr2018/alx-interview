@@ -2,12 +2,13 @@
 """
 0-pascal_triangle.py
 """
-from math import factorial
+
 
 
 def pascal_triangle(n):
     """
-    this function returns a list of lists of integers representing the Pascal’s triangle of n
+    this function returns a list of lists of integers,
+    representing the Pascal’s triangle of n.
     """
     if n <= 0:
         return []

@@ -4,7 +4,6 @@
 """
 
 
-
 def pascal_triangle(n):
     """
     this function returns a list of lists of integers,
@@ -21,4 +20,3 @@ def pascal_triangle(n):
                 r[j] = triangles[i - 1][j - 1] + triangles[i - 1][j]
         triangles.append(r)
     return triangles
-

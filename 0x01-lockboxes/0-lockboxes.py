@@ -6,6 +6,9 @@ from collections import deque
 
 
 def canUnlockAll(boxes):
+    """
+    Write a method that determines if all the boxes can be opened.
+    """
     if not boxes or len(boxes) == 0:
         return False
 
@@ -21,4 +24,4 @@ def canUnlockAll(boxes):
                 opened_boxes.add(key)
                 queue.append(key)
 
-        return len(opened_boxes) == len(boxes)
+    return len(opened_boxes) == len(boxes)

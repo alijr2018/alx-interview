@@ -11,13 +11,10 @@ def minOperations(n):
     if n <= 1:
         return 0
 
-    x = 0
+    # Find the largest factor of n
     for i in range(2, int(n**0.5) + 1):
-        while n % i == 0:
-            x += 1
-            n //= i
+        if n % i == 0:
+            return minOperations(n // i) + i
 
-    if n > 1:
-        x += n
-
-    return x
+    # If n is a prime number, it can only be achieved by copying and pasting
+    return n

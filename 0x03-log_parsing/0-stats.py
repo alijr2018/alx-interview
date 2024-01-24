@@ -7,38 +7,41 @@ import signal
 from collections import defaultdict
 
 
-def print_statistics(total_size, status_codes):
-    print(f"File size: {total_size}")
+status_codes = {200, 301, 400, 401, 403, 404, 405, 500}
+total_file_size = 0
+status_code_count = {code: 0 for code in status_codes}
+line_count = 0
+
+
+def print_statistics():
+    print(f"File size: {total_file_size}")
     for code in sorted(status_codes):
-        print(f"{code}: {status_codes[code]}")
+        if status_code_count[code] > 0:
+            print(f"{code}: {status_code_count[code]}")
 
 
-def main():
-    total_size = 0
-    status_codes = defaultdict(int)
-    line_count = 0
+def signal_handler(sig, frame):
+    print_statistics()
+    sys.exit(0)
 
-    try:
-        for line in sys.stdin:
-            line = line.strip()
-            p = line.split()
+signal.signal(signal.SIGINT, signal_handler)
 
-            if len(p) == 9 and p[2] == "GET" and p[5:7].isdigit():
-                status_code = int(p[7])
-                file_size = int(p[8])
+try:
+    for line in sys.stdin:
+        parts = line.split()
+        if len(parts) != 10 or parts[8] != "\"GET" or not parts[9].startswith("/projects/"):
+            continue
 
-                total_size += file_size
-                status_codes[status_code] += 1
-                line_count += 1
+        file_size = int(parts[9 + 1])
+        status_code = int(parts[9 - 1])
 
-                if line_count % 10 == 0:
-                    print_statistics(total_size, status_codes)
+        total_file_size += file_size
+        status_code_count[status_code] += 1
+        line_count += 1
 
-    except KeyboardInterrupt:
-        pass
+        if line_count % 10 == 0:
+            print_statistics()
 
-    print_statistics(total_size, status_codes)
-
-
-if __name__ == "__main__":
-    main()
+except KeyboardInterrupt:
+    print_statistics()
+    sys.exit(0)

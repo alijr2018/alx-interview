@@ -7,19 +7,19 @@ import signal
 from collections import defaultdict
 
 
-status_codes = {200, 301, 400, 401, 403, 404, 405, 500}
-total_file_size = 0
-status_code_count = {code: 0 for code in status_codes}
-line_count = 0
-
-
 def print_statistics(total_size, status_counts):
+    """
+    a formatting and printing the computed statistics
+    """
     print(f"File size: {total_size}")
     for status_code in sorted(status_counts.keys()):
         print(f"{status_code}: {status_counts[status_code]}")
 
 
 def main():
+    """
+    script that reads stdin line by line and computes metrics
+    """
     total_size = 0
     status_counts = {}
 

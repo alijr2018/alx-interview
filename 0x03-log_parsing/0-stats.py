@@ -13,35 +13,37 @@ status_code_count = {code: 0 for code in status_codes}
 line_count = 0
 
 
-def print_statistics():
-    print(f"File size: {total_file_size}")
-    for code in sorted(status_codes):
-        if status_code_count[code] > 0:
-            print(f"{code}: {status_code_count[code]}")
+def print_statistics(total_size, status_counts):
+    print(f"File size: {total_size}")
+    for status_code in sorted(status_counts.keys()):
+        print(f"{status_code}: {status_counts[status_code]}")
 
 
-def signal_handler(sig, frame):
-    print_statistics()
-    sys.exit(0)
+def main():
+    total_size = 0
+    status_counts = {}
 
-signal.signal(signal.SIGINT, signal_handler)
+    try:
+        for i, line in enumerate(sys.stdin, start=1):
+            try:
+                parts = line.split()
+                ip_address = parts[0]
+                status_code = int(parts[-2])
+                file_size = int(parts[-1])
+            except (IndexError, ValueError):
+                continue
 
-try:
-    for line in sys.stdin:
-        parts = line.split()
-        if len(parts) != 10 or parts[8] != "\"GET" or not parts[9].startswith("/projects/"):
-            continue
+            total_size += file_size
+            status_counts[status_code] = status_counts.get(status_code, 0) + 1
 
-        file_size = int(parts[9 + 1])
-        status_code = int(parts[9 - 1])
+            if i % 10 == 0:
+                print_statistics(total_size, status_counts)
 
-        total_file_size += file_size
-        status_code_count[status_code] += 1
-        line_count += 1
+    except KeyboardInterrupt:
+        pass
 
-        if line_count % 10 == 0:
-            print_statistics()
+    print_statistics(total_size, status_counts)
 
-except KeyboardInterrupt:
-    print_statistics()
-    sys.exit(0)
+
+if __name__ == "__main__":
+    main()

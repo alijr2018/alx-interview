@@ -1,18 +1,18 @@
 #!/usr/bin/node
 
 const request = require('request');
-const movieId = process.argv[2];
 
-const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+const url = `https://swapi-api.alx-tools.com/api/films/${process.argv[2]}/`;
 
-request(apiUrl, async function (error, response, body) {
+request(url, async function (error, response, body) {
   if (error) {
     return console.log(error);
   } else {
     const characters = JSON.parse(body).characters;
-    for (const character in characters) {
-      const res = await new Promise((resolve, reject) => {
-        request(characters[character], (err, res, html) => {
+
+    const fetchCharacter = async (characterUrl) => {
+      return new Promise((resolve, reject) => {
+        request(characterUrl, (err, res, html) => {
           if (err) {
             reject(err);
           } else {
@@ -20,7 +20,15 @@ request(apiUrl, async function (error, response, body) {
           }
         });
       });
-      console.log(res);
+    };
+
+    for (const characterUrl of characters) {
+      try {
+        const characterName = await fetchCharacter(characterUrl);
+        console.log(characterName);
+      } catch (err) {
+        console.error('Error fetching character:', err);
+      }
     }
   }
 });

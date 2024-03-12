@@ -4,40 +4,54 @@
 """
 
 
-def sieve_of_eratosthenes(limit):
+def is_prime(num):
     """
-    sieve of erostosthenes
+    checking is it prime
     """
-    primes = [True] * (limit + 1)
-    primes[0] = primes[1] = False
-    for i in range(2, int(limit**0.5) + 1):
-        if primes[i]:
-            for j in range(i*i, limit + 1, i):
-                primes[j] = False
-    return [num for num, is_prime in enumerate(primes) if is_prime]
+    if num < 2:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+
+def prime_sieve(n):
+    """
+    prime
+    """
+    sieve = [True] * (n+1)
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(n**0.5) + 1):
+        if sieve[i]:
+            for j in range(i*i, n+1, i):
+                sieve[j] = False
+    primes = []
+    for i in range(2, n+1):
+        if sieve[i]:
+            primes.append(i)
+    return primes
 
 
 def isWinner(x, nums):
     """
     is winner
     """
-    max_n = max(nums)
-    primes = sieve_of_eratosthenes(max_n)
-
-    maria_wins = 0
-    ben_wins = 0
+    wins_maria = 0
+    wins_ben = 0
 
     for n in nums:
-        prime_count = primes[:n + 1].count(True)
+        primes = prime_sieve(n)
+        prime_count = sum(1 for p in primes if p <= n)
 
         if prime_count % 2 == 0:
-            ben_wins += 1
+            wins_ben += 1
         else:
-            maria_wins += 1
+            wins_maria += 1
 
-    if maria_wins > ben_wins:
+    if wins_maria > wins_ben:
         return "Maria"
-    elif ben_wins > maria_wins:
+    elif wins_ben > wins_maria:
         return "Ben"
     else:
         return None

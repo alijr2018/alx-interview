@@ -44,7 +44,9 @@ def isWinner(x, nums):
         primes = prime_sieve(n)
         prime_count = sum(1 for p in primes if p <= n)
 
-        if prime_count % 2 == 0:
+        if prime_count == 0:
+            wins_ben += 1
+        elif prime_count % 2 == 0:
             wins_ben += 1
         else:
             wins_maria += 1

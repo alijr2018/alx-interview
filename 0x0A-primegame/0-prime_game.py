@@ -5,6 +5,9 @@
 
 
 def sieve_of_eratosthenes(limit):
+    """
+    sieve of erostosthenes
+    """
     primes = [True] * (limit + 1)
     primes[0] = primes[1] = False
     for i in range(2, int(limit**0.5) + 1):
@@ -15,6 +18,9 @@ def sieve_of_eratosthenes(limit):
 
 
 def isWinner(x, nums):
+    """
+    is winner
+    """
     max_n = max(nums)
     primes = sieve_of_eratosthenes(max_n)
 

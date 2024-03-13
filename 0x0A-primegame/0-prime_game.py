@@ -16,19 +16,10 @@ def is_prime(num):
     return True
 
 
-def prime_sieve(n):
-    """
-    prime
-    """
-    sieve = [True] * (n+1)
-    sieve[0] = sieve[1] = False
-    for i in range(2, int(n**0.5) + 1):
-        if sieve[i]:
-            for j in range(i*i, n+1, i):
-                sieve[j] = False
+def generate_primes(limit):
     primes = []
-    for i in range(2, n+1):
-        if sieve[i]:
+    for i in range(2, limit + 1):
+        if is_prime(i):
             primes.append(i)
     return primes
 
@@ -37,23 +28,18 @@ def isWinner(x, nums):
     """
     is winner
     """
-    wins_maria = 0
-    wins_ben = 0
+    wins = {"Maria": 0, "Ben": 0}
 
-    for n in nums:
-        primes = prime_sieve(n)
-        prime_count = sum(1 for p in primes if p <= n)
-
-        if prime_count == 0:
-            wins_ben += 1
-        elif prime_count % 2 == 0:
-            wins_ben += 1
+    for num in nums:
+        primes = generate_primes(num)
+        if len(primes) % 2 == 0:
+            wins["Ben"] += 1
         else:
-            wins_maria += 1
+            wins["Maria"] += 1
 
-    if wins_maria > wins_ben:
+    if wins["Maria"] > wins["Ben"]:
         return "Maria"
-    elif wins_ben > wins_maria:
+    elif wins["Maria"] < wins["Ben"]:
         return "Ben"
     else:
         return None

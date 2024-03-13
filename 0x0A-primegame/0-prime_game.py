@@ -32,11 +32,11 @@ def isWinner(x, nums):
 
     for num in nums:
         primes = generate_primes(num)
-        prime_count = sum(primes)
-        if prime_count % 2 == 0:
+        if len(primes) % 2 == 0:
             wins["Ben"] += 1
         else:
             wins["Maria"] += 1
+
     if wins["Maria"] > wins["Ben"]:
         return "Maria"
     elif wins["Maria"] < wins["Ben"]:

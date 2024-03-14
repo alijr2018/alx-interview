@@ -4,41 +4,59 @@
 """
 
 
-def primes(n):
-    """Return list of prime numbers between 1 and n inclusive
-       Args:
-        n (int): upper boundary of range. lower boundary is always 1
-    """
-    prime = []
-    sieve = [True] * (n + 1)
-    for p in range(2, n + 1):
-        if (sieve[p]):
-            prime.append(p)
-            for i in range(p, n + 1, p):
-                sieve[i] = False
-    return prime
-
-
 def isWinner(x, nums):
-    """
-    Determines winner of Prime Game
-    Args:
-        x (int): no. of rounds of game
-        nums (int): upper limit of range for each round
-    Return:
-        Name of winner (Maria or Ben) or None if winner cannot be found
-    """
-    if x is None or nums is None or x == 0 or nums == []:
-        return None
-    Maria = Ben = 0
-    for i in range(x):
-        prime = primes(nums[i])
-        if len(prime) % 2 == 0:
-            Ben += 1
+    def is_prime(num):
+        if num <= 1:
+            return False
+        if num <= 3:
+            return True
+        if num % 2 == 0 or num % 3 == 0:
+            return False
+        i = 5
+        while i * i <= num:
+            if num % i == 0 or num % (i + 2) == 0:
+                return False
+            i += 6
+        return True
+
+    def calculate_primes(n):
+        primes = []
+        for i in range(2, n + 1):
+            if is_prime(i):
+                primes.append(i)
+        return primes
+
+    def can_player_win(primes, n):
+        memo = {}
+
+        def can_win(count):
+            if count <= 1:
+                return False
+            if count in memo:
+                return memo[count]
+            for prime in primes:
+                if count % prime == 0:
+                    if not can_win(count - prime):
+                        memo[count] = True
+                        return True
+            memo[count] = False
+            return False
+
+        return can_win(n)
+
+    maria_wins = 0
+    ben_wins = 0
+
+    for n in nums:
+        primes = calculate_primes(n)
+        if can_player_win(primes, n):
+            maria_wins += 1
         else:
-            Maria += 1
-    if Maria > Ben:
-        return 'Maria'
-    elif Ben > Maria:
-        return 'Ben'
-    return None
+            ben_wins += 1
+
+    if maria_wins > ben_wins:
+        return "Maria"
+    elif maria_wins < ben_wins:
+        return "Ben"
+    else:
+        return None

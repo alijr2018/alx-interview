@@ -28,8 +28,8 @@ def isWinner(x, nums):
     maria_wins = 0
     ben_wins = 0
 
-    for limit in nums:
-        prime_numbers = is_prime(limit)
+    for limit in range(x):
+        prime_numbers = is_prime(nums[limit])
         if len(prime_numbers) % 2 == 0:
             ben_wins += 1
         else:
